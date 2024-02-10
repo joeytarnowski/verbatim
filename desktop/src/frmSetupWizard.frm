@@ -17,6 +17,7 @@ Option Explicit
 
 
 Private Sub btnSamfordInfo_Click()
+    Unload Me
     UI.ShowFormSamfordHelp
 End Sub
 

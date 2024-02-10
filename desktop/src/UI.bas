@@ -83,6 +83,10 @@ Public Sub ShowFormSamfordHelp()
     UI.ShowForm "SamfordHelp"
 End Sub
 
+Public Sub ShowFormSetupWizard()
+    UI.ShowForm "Setup"
+End Sub
+
 Public Sub LaunchTutorial()
     Dim d As Document
     Dim TutorialDoc As String

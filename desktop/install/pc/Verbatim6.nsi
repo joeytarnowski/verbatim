@@ -13,10 +13,10 @@ Unicode true
 !include "Sections.nsh"
 
 ; The name of the installer
-Name "Verbatim 6.0.0"
+Name "Samford Verbatim 6.0.0"
 
 ; The file to write
-OutFile "Verbatim6.exe"
+OutFile "SamfordVerbatim.exe"
 
 ; The default installation directory
 InstallDir $APPDATA\Microsoft\Templates
