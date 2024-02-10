@@ -3,8 +3,8 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmSetupWizard
    Caption         =   "Verbatim Setup Wizard"
    ClientHeight    =   5820
    ClientLeft      =   120
-   ClientTop       =   450
-   ClientWidth     =   7515
+   ClientTop       =   456
+   ClientWidth     =   7512
    OleObjectBlob   =   "frmSetupWizard.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -14,6 +14,11 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
+
+
+Private Sub btnSamfordInfo_Click()
+    UI.ShowFormSamfordHelp
+End Sub
 
 Private Sub UserForm_Initialize()
     On Error GoTo Handler

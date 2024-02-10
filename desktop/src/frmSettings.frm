@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmSettings 
    Caption         =   "Verbatim Settings"
-   ClientHeight    =   7815
-   ClientLeft      =   45
-   ClientTop       =   375
-   ClientWidth     =   9705
+   ClientHeight    =   7824
+   ClientLeft      =   48
+   ClientTop       =   372
+   ClientWidth     =   9708.001
    OleObjectBlob   =   "frmSettings.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -95,6 +95,19 @@ Private Sub SetPage(ByVal MenuTab As String)
     End Select
 End Sub
 
+
+
+Private Sub chkSaveToDesktop_Click()
+    If chkSaveToDesktop.Value = True Then
+        cboSendSaveDirectory.Enabled = False
+        lblSendDocDir.Enabled = False
+    Else
+        cboSendSaveDirectory.Enabled = True
+        lblSendDocDir.Enabled = True
+    End If
+    
+End Sub
+
 Private Sub lblTabProfile_Click()
     SetPage "Profile"
 End Sub
@@ -139,6 +152,8 @@ Private Sub lblTabAbout_Click()
     SetPage "About"
 End Sub
 
+
+
 '*************************************************************************************
 '* GENERAL FUNCTIONS                                                                 *
 '*************************************************************************************
@@ -156,7 +171,7 @@ Private Sub UserForm_Initialize()
     #If Mac Then
         UI.ResizeUserForm Me
         Me.btnCancel.ForeColor = Globals.RED
-        Me.btnResetAllSettings.ForeColor = Globals.ORANGE
+        Me.btnResetAllSettings.ForeColor = Globals.oRange
         Me.btnSave.ForeColor = Globals.BLUE
         Me.btnTabroomLogout.ForeColor = Globals.RED
         Me.btnTabroomLogin.ForeColor = Globals.BLUE
@@ -217,6 +232,8 @@ Private Sub UserForm_Initialize()
     Me.chkRibbonDisableView.Value = GetSetting("Verbatim", "View", "RibbonDisableView", False)
     Me.chkRibbonDisableCaselist.Value = GetSetting("Verbatim", "View", "RibbonDisableCaselist", False)
     Me.chkRibbonDisableSettings.Value = GetSetting("Verbatim", "View", "RibbonDisableSettings", False)
+    Me.chkReadMarks.Value = GetSetting("Verbatim", "View", "MarkInRead", True)
+    
         
     ' Paperless Tab
     Me.chkAutoSaveSpeech.Value = GetSetting("Verbatim", "Paperless", "AutoSaveSpeech", False)
@@ -225,6 +242,10 @@ Private Sub UserForm_Initialize()
     Me.cboSearchDir.Value = GetSetting("Verbatim", "Paperless", "SearchDir", "")
     Me.cboAutoOpenDir.Value = GetSetting("Verbatim", "Paperless", "AutoOpenDir", "")
     Me.cboAudioDir.Value = GetSetting("Verbatim", "Paperless", "AudioDir", "")
+    Me.chkMakeZappedDoc.Value = GetSetting("Verbatim", "Paperless", "MakeZappedDoc", True)
+    Me.chkSaveToDesktop.Value = GetSetting("Verbatim", "Paperless", "SendSaveToDesktop", True)
+    Me.cboSendSaveDirectory.Value = GetSetting("Verbatim", "Paperless", "SendDocDir", "")
+    Me.chkCloseSendDocAuto.Value = GetSetting("Verbatim", "Paperless", "CloseSendDocAuto", True)
       
     ' Populate Styles Tab Comboboxes - Allow 8pt-32pt
     FontSize = 8
@@ -545,6 +566,7 @@ Private Sub btnSave_Click()
     SaveSetting "Verbatim", "View", "RibbonDisableView", Me.chkRibbonDisableView.Value
     SaveSetting "Verbatim", "View", "RibbonDisableCaselist", Me.chkRibbonDisableCaselist.Value
     SaveSetting "Verbatim", "View", "RibbonDisableSettings", Me.chkRibbonDisableSettings.Value
+    SaveSetting "Verbatim", "View", "MarkInRead", Me.chkReadMarks.Value
     
     ' Paperless Tab
     SaveSetting "Verbatim", "Paperless", "AutoSaveSpeech", Me.chkAutoSaveSpeech.Value
@@ -553,6 +575,10 @@ Private Sub btnSave_Click()
     SaveSetting "Verbatim", "Paperless", "SearchDir", Me.cboSearchDir.Value
     SaveSetting "Verbatim", "Paperless", "AutoOpenDir", Me.cboAutoOpenDir.Value
     SaveSetting "Verbatim", "Paperless", "AudioDir", Me.cboAudioDir.Value
+    SaveSetting "Verbatim", "Paperless", "MakeZappedDoc", Me.chkMakeZappedDoc.Value
+    SaveSetting "Verbatim", "Paperless", "SaveSendToDesktop", Me.chkSaveToDesktop.Value
+    SaveSetting "Verbatim", "Paperless", "SendDocDir", Me.cboSendSaveDirectory.Value
+    SaveSetting "Verbatim", "Paperless", "CloseSendDocAuto", Me.chkCloseSendDocAuto.Value
     
     ' Styles Tab
     SaveSetting "Verbatim", "Styles", "NormalSize", Me.cboNormalSize.Value
@@ -1157,6 +1183,13 @@ Private Sub cboAudioDir_DropButtonClick()
     Me.btnCancel.SetFocus 'Have to switch focus to avoid dropdown getting stuck
     
     On Error GoTo 0
+End Sub
+
+Private Sub cboSendSaveDirectory_DropButtonClick()
+    On Error Resume Next
+    
+    Me.cboSendSaveDirectory.Value = UI.GetFolderFromDialog("Choose a Send Doc Folder", "Select")
+    Me.btnCancel.SetFocus 'Have to switch focus to avoid dropdown getting stuck
 End Sub
 
 '*************************************************************************************

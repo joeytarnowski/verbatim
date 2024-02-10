@@ -69,7 +69,13 @@ Public Sub PasteText()
 End Sub
 
 Public Sub Highlight()
-    WordBasic.Highlight
+    If GetSetting("Verbatim", "View", "MarkInRead", True) = True Then
+        If ActiveDocument.ActiveWindow.View.ReadingLayout Then
+            Selection.Range.HighlightColorIndex = wdRed
+        Else: WordBasic.Highlight
+        End If
+    Else: WordBasic.Highlight
+    End If
 End Sub
 
 Public Sub ClearToNormal()

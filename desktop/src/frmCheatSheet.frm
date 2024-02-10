@@ -1,9 +1,9 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmCheatSheet 
    Caption         =   "Cheat Sheet"
-   ClientHeight    =   9420
+   ClientHeight    =   9420.001
    ClientLeft      =   120
-   ClientTop       =   450
+   ClientTop       =   456
    ClientWidth     =   6360
    OleObjectBlob   =   "frmCheatSheet.frx":0000
    ShowModal       =   0   'False
@@ -15,6 +15,10 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
+
+Private Sub lboxShortcuts_Click()
+
+End Sub
 
 Private Sub UserForm_Activate()
     Dim k As KeyBinding
@@ -47,6 +51,14 @@ Private Sub UserForm_Activate()
     Me.lboxShortcuts.AddItem
     Me.lboxShortcuts.List(Me.lboxShortcuts.ListCount - 1, 0) = "Send To Speech End"
     Me.lboxShortcuts.List(Me.lboxShortcuts.ListCount - 1, 1) = Shortcuts.Item("Verbatim.Paperless.SendToSpeechEnd")
+    
+    Me.lboxShortcuts.AddItem
+    Me.lboxShortcuts.List(Me.lboxShortcuts.ListCount - 1, 0) = "Make Send/Zapped Docs"
+    Me.lboxShortcuts.List(Me.lboxShortcuts.ListCount - 1, 1) = Shortcuts.Item("Verbatim.SamfordTools.SendDoc")
+    
+    Me.lboxShortcuts.AddItem
+    Me.lboxShortcuts.List(Me.lboxShortcuts.ListCount - 1, 0) = "See Send/Zapped Docs Options"
+    Me.lboxShortcuts.List(Me.lboxShortcuts.ListCount - 1, 1) = Shortcuts.Item("Verbatim.SamfordTools.MakeNewDocOptions")
     
     Me.lboxShortcuts.AddItem
     Me.lboxShortcuts.List(Me.lboxShortcuts.ListCount - 1, 0) = "Send To Flow (Cell)"

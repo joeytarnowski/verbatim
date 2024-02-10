@@ -204,7 +204,7 @@ End Sub
 '@Ignore ProcedureNotUsed
 Public Sub NewSpeechFromMenu(ByVal c As IRibbonControl)
     Dim AutoSaveDir As String
-    Dim Filename As String
+    Dim fileName As String
     Dim h As String
 
     On Error GoTo Handler
@@ -213,30 +213,30 @@ Public Sub NewSpeechFromMenu(ByVal c As IRibbonControl)
     Paperless.NewDocument
 
     ' Get filename from control tag
-    Filename = c.Tag
+    fileName = c.Tag
     
     ' If Tag is just the speech name, add a date
-    If Len(Filename) = 3 Then
+    If Len(fileName) = 3 Then
         If Hour(Now) = 12 Then h = "12PM"
         If Hour(Now) > 12 Then h = Hour(Now) - 12 & "PM"
         If Hour(Now) < 12 Then h = Hour(Now) & "AM"
         If Hour(Now) = 0 Then h = "12AM"
-        Filename = Filename & " " & Month(Now) & "-" & Day(Now) & " " & h
+        fileName = fileName & " " & Month(Now) & "-" & Day(Now) & " " & h
     End If
     
     ' Add speech to the name
-    Filename = "Speech " & Filename
+    fileName = "Speech " & fileName
     
     ' Autosave or open save dialog
     If GetSetting("Verbatim", "Paperless", "AutoSaveSpeech", False) = True Then
         AutoSaveDir = GetSetting("Verbatim", "Paperless", "AutoSaveDir", CurDir$())
         If AutoSaveDir = "" Then AutoSaveDir = CurDir$()
         If Right$(AutoSaveDir, 1) <> Application.PathSeparator Then AutoSaveDir = AutoSaveDir & Application.PathSeparator
-        Filename = AutoSaveDir & Application.PathSeparator & Filename
-        ActiveDocument.SaveAs Filename:=Filename, FileFormat:=wdFormatXMLDocument
+        fileName = AutoSaveDir & Application.PathSeparator & fileName
+        ActiveDocument.SaveAs fileName:=fileName, FileFormat:=wdFormatXMLDocument
     Else
         With Application.Dialogs.Item(wdDialogFileSaveAs)
-            .Name = Filename
+            .Name = fileName
             If .Show = 0 Then Exit Sub
         End With
     End If
@@ -614,7 +614,7 @@ Public Sub SendToSpeech(Optional ByVal PasteAtEnd As Boolean)
     Dim CurrentDoc As String
     Dim SpeechDoc As Document
     Dim d As Document
-    Dim FoundDoc As Long
+    Dim foundDoc As Long
 
     On Error GoTo Handler
 
@@ -666,14 +666,14 @@ SpeechDocCheck:
         ' Look for a document with "speech" in the title
         For Each d In Application.Documents
             If InStr(LCase$(d.Name), "speech") Then
-                FoundDoc = FoundDoc + 1
-                If FoundDoc = 1 Then Set SpeechDoc = d
+                foundDoc = foundDoc + 1
+                If foundDoc = 1 Then Set SpeechDoc = d
             End If
         Next d
         
         ' If no Speech doc is found, prompt whether to create one.
         ' If yes, create a new document based on the current template to save, then retry
-        If FoundDoc = 0 Then
+        If foundDoc = 0 Then
             If MsgBox("Speech document is not open - create one?", vbYesNo, "Create Speech?") = vbNo Then
                 Exit Sub
             Else
@@ -687,7 +687,7 @@ SpeechDocCheck:
         End If
     
         ' If multiple Speech docs are open, warn the user.
-        If FoundDoc > 1 Then
+        If foundDoc > 1 Then
             UI.ShowForm "ChooseSpeechDoc"
             Exit Sub
         End If
@@ -766,7 +766,7 @@ End Sub
 Public Sub NewSpeech()
 ' Creates a new Speech document
     Dim SpeechName As String
-    Dim Filename As String
+    Dim fileName As String
     Dim h As String
     Dim AutoSaveDir As String
  
@@ -787,7 +787,7 @@ SpeechName:
     If Hour(Now) > 12 Then h = Hour(Now) - 12 & "PM"
     If Hour(Now) < 12 Then h = Hour(Now) & "AM"
     If Hour(Now) = 0 Then h = "12AM"
-    Filename = "Speech " & SpeechName & " " & Month(Now) & "-" & Day(Now) & " " & h
+    fileName = "Speech " & SpeechName & " " & Month(Now) & "-" & Day(Now) & " " & h
 
     ' Add new document based on template
     Paperless.NewDocument
@@ -797,11 +797,11 @@ SpeechName:
         AutoSaveDir = GetSetting("Verbatim", "Paperless", "AutoSaveDir", CurDir$())
         If AutoSaveDir = "" Then AutoSaveDir = CurDir$()
         If Right$(AutoSaveDir, 1) <> Application.PathSeparator Then AutoSaveDir = AutoSaveDir & Application.PathSeparator
-        Filename = AutoSaveDir & Filename
-        ActiveDocument.SaveAs Filename:=Filename, FileFormat:=wdFormatXMLDocument
+        fileName = AutoSaveDir & fileName
+        ActiveDocument.SaveAs fileName:=fileName, FileFormat:=wdFormatXMLDocument
     Else
         With Application.Dialogs.Item(wdDialogFileSaveAs)
-            .Name = Filename
+            .Name = fileName
             If .Show = 0 Then Exit Sub
         End With
     End If
@@ -819,13 +819,13 @@ End Sub
 
 Public Sub CopyToUSB()
 ' Copies the current file to the root folder of the first found USB drive
-    Dim Filename As String
+    Dim fileName As String
     
     ' Strip "Speech" if option set
     If GetSetting("Verbatim", "Paperless", "StripSpeech", True) = True And Len(ActiveDocument.Name) > 11 Then
-        Filename = Trim$(Replace(ActiveDocument.Name, "speech", "", 1, -1, vbTextCompare))
+        fileName = Trim$(Replace(ActiveDocument.Name, "speech", "", 1, -1, vbTextCompare))
     Else
-        Filename = Trim$(ActiveDocument.Name)
+        fileName = Trim$(ActiveDocument.Name)
     End If
     
     ' Save File locally
@@ -855,12 +855,12 @@ Public Sub CopyToUSB()
             m = Trim(Replace(m, "Mount Point: ", "")) & "/" ' Get just the mount path and add a trailing /
             
             ' Check if file already exists on USB
-            If AppleScriptTask("Verbatim.scpt", "RunShellScript", "test -e '" & m & Filename & "'; echo $?") = "0" Then
+            If AppleScriptTask("Verbatim.scpt", "RunShellScript", "test -e '" & m & fileName & "'; echo $?") = "0" Then
                 If MsgBox("File Exists.  Overwrite?", vbOKCancel) = vbCancel Then Exit Sub
             End If
             
             ' Copy To USB
-            AppleScriptTask "Verbatim.scpt", "RunShellScript", "cp '" & ActiveDocument.FullName & "' '" & m & Filename & "'"
+            AppleScriptTask "Verbatim.scpt", "RunShellScript", "cp '" & ActiveDocument.FullName & "' '" & m & fileName & "'"
             MsgBox "Sucessfully copied to USB!"
         Next m
         
@@ -891,13 +891,13 @@ Public Sub CopyToUSB()
         End If
                
         ' Check if file already exists on USB
-        If Filesystem.FileExists(USB & Application.PathSeparator & Filename) = True Then
+        If Filesystem.FileExists(USB & Application.PathSeparator & fileName) = True Then
             If MsgBox("File Exists.  Overwrite?", vbOKCancel) = vbCancel Then Exit Sub
         End If
         
         
         ' Copy To USB
-        FSO.CopyFile ActiveDocument.FullName, USB & Application.PathSeparator & Filename
+        FSO.CopyFile ActiveDocument.FullName, USB & Application.PathSeparator & fileName
     
         MsgBox "Sucessfully copied to USB!"
     

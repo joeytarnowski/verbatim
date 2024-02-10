@@ -22,6 +22,10 @@ Public Sub ShowForm(ByVal FormName As String)
             Set Form = New frmLogin
         Case "Progress"
             Set Form = New frmProgress
+        Case "SamfordDoc"
+            Set Form = New frmSamfordDoc
+        Case "SamfordHelp"
+            Set Form = New frmSamfordHelp
         Case "Settings"
             Set Form = New frmSettings
         Case "Setup"
@@ -73,6 +77,10 @@ End Sub
 
 Public Sub ShowFormChooseSpeechDoc()
     UI.ShowForm "ChooseSpeechDoc"
+End Sub
+
+Public Sub ShowFormSamfordHelp()
+    UI.ShowForm "SamfordHelp"
 End Sub
 
 Public Sub LaunchTutorial()
